@@ -83,8 +83,10 @@ extension String {
         arrayLength = arrayLength / 2
         
         var buffer : Array<UInt8> = Array(repeating: 0 , count: length)
-        for index :Int in 0  ..< arrayLength  {
+        print("__I self: \(self) len: \(arrayLength), len2: \(self.utf8.count) length: \(length)")
+        for index in 0..<arrayLength  {
             let substring :String = (hexString as NSString).substring(with: NSRange(location: 2 * index, length: 2))
+            print("__I: \(arrayLength - index - 1)")
             buffer[arrayLength - index - 1] = UInt8(substring, radix: 16)!
         }
         

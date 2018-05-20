@@ -153,6 +153,7 @@
 		4FFF8F011D51D7E600B4BB9F /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFF8F001D51D7E600B4BB9F /* AccountModel.swift */; };
 		644160CB1EF8EA0B00534DB9 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 644160CA1EF8EA0B00534DB9 /* Settings.bundle */; };
 		64F22B8D1EE67B9700780900 /* UIViewController+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F22B8C1EE67B9700780900 /* UIViewController+Additions.swift */; };
+		6621C4EB20A6E498000506D4 /* TestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6621C4EA20A6E498000506D4 /* TestService.swift */; };
 		9809BE271B75008F0028D082 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9809BE291B75008F0028D082 /* Localizable.strings */; };
 		98BB95D31BCCED5B002151F7 /* readme.md in Sources */ = {isa = PBXBuildFile; fileRef = 98BB95B91BCCED5B002151F7 /* readme.md */; };
 		98BB95D41BCCED5B002151F7 /* add_scalar.c in Sources */ = {isa = PBXBuildFile; fileRef = 98BB95BB1BCCED5B002151F7 /* add_scalar.c */; };
@@ -356,6 +357,8 @@
 		4FFF8F001D51D7E600B4BB9F /* AccountModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
 		644160CA1EF8EA0B00534DB9 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		64F22B8C1EE67B9700780900 /* UIViewController+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Additions.swift"; sourceTree = "<group>"; };
+		6621C4EA20A6E498000506D4 /* TestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestService.swift; sourceTree = "<group>"; };
+		6621C4EC20A6EF27000506D4 /* NemIOSClient-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NemIOSClient-Bridging-Header.h"; sourceTree = "<group>"; };
 		98019A4E1CAC1E4400C61638 /* id-ID */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "id-ID"; path = "id-ID.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		98019A4F1CAC270E00C61638 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		98019A501CAC28CB00C61638 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -791,6 +794,7 @@
 				DA35582C1A39D76200AFA5FD /* Application */,
 				4F1159D41D38FC1300E13EE0 /* Shared */,
 				DA4369CF1A6411B800868BAD /* Assets */,
+				6621C4EA20A6E498000506D4 /* TestService.swift */,
 			);
 			path = NEMWallet;
 			sourceTree = "<group>";
@@ -798,6 +802,7 @@
 		DA3558031A39D3BA00AFA5FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6621C4EC20A6EF27000506D4 /* NemIOSClient-Bridging-Header.h */,
 				4F01CDAC1FC715D6003F192D /* NEMWallet.entitlements */,
 				4F3ACE911D61C2EE0056F234 /* Response+ObjectMapper.swift */,
 				4FA92FC61D7093A800C9477B /* KeyboardLayoutConstraint.swift */,
@@ -960,7 +965,7 @@
 					};
 					DA3557FF1A39D3B900AFA5FD = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = PNXDDDXH4F;
+						DevelopmentTeam = A2BD6B59PH;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1088,6 +1093,7 @@
 				4F9F67EE1D4C31140086F98F /* NavigationController.swift in Sources */,
 				4F0B5EFD1DAFD38500E182C3 /* DetailedTableViewCell.swift in Sources */,
 				4F3ACE9F1D6217430056F234 /* MultisigSignatureTransactionModel.swift in Sources */,
+				6621C4EB20A6E498000506D4 /* TestService.swift in Sources */,
 				4F3ACE941D61C31C0056F234 /* AccountDataModel.swift in Sources */,
 				4F3ACE9D1D6214060056F234 /* TransferTransactionModel.swift in Sources */,
 				4F850F171D4C3C930003E192 /* NSData+Base64.m in Sources */,
@@ -1397,7 +1403,7 @@
 				CODE_SIGN_ENTITLEMENTS = "NEMWallet/Assets/Supporting Files/NEMWallet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = PNXDDDXH4F;
+				DEVELOPMENT_TEAM = A2BD6B59PH;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1408,7 +1414,7 @@
 				INSTALL_OWNER = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.nem.Wallet;
+				PRODUCT_BUNDLE_IDENTIFIER = local.io.nem.Wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "NEMWallet/Assets/Supporting Files/NemIOSClient-Bridging-Header.h";
@@ -1427,7 +1433,7 @@
 				CODE_SIGN_ENTITLEMENTS = "NEMWallet/Assets/Supporting Files/NEMWallet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = PNXDDDXH4F;
+				DEVELOPMENT_TEAM = A2BD6B59PH;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1438,7 +1444,7 @@
 				INSTALL_OWNER = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.nem.Wallet;
+				PRODUCT_BUNDLE_IDENTIFIER = local.io.nem.Wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "NEMWallet/Assets/Supporting Files/NemIOSClient-Bridging-Header.h";

@@ -4,33 +4,32 @@
 //  This file is covered by the LICENSE file in the root of this project.
 //  Copyright (c) 2016 NEM
 //
-
 import Foundation
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
 }
 
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l > r
+    default:
+        return rhs < lhs
+    }
 }
 
 /**
-    The transaction manager singleton used to perform all kinds of actions
-    in relationship with a transaction. Use this managers available methods
-    instead of writing your own logic.
+ The transaction manager singleton used to perform all kinds of actions
+ in relationship with a transaction. Use this managers available methods
+ instead of writing your own logic.
  */
 final class TransactionManager {
     
@@ -38,18 +37,18 @@ final class TransactionManager {
     
     /// The singleton for the transaction manager.
     open static let sharedInstance = TransactionManager()
-
+    
     // MARK: - Public Manager Methods
     
     /**
-        Signes the provided transaction and creates the corresponding
-        request announce object that will get passed to the NIS to
-        announce the transaction.
+     Signes the provided transaction and creates the corresponding
+     request announce object that will get passed to the NIS to
+     announce the transaction.
      
-        - Parameter transaction: The transaction which should get signed.
-        - Parameter account: The account with which the transaction should get signed.
+     - Parameter transaction: The transaction which should get signed.
+     - Parameter account: The account with which the transaction should get signed.
      
-        - Returns: The request announce object of the provided transaction that will get passed to the NIS to announce the transaction.
+     - Returns: The request announce object of the provided transaction that will get passed to the NIS to announce the transaction.
      */
     open func signTransaction(_ transaction: Transaction, account: Account) -> RequestAnnounce {
         
@@ -57,17 +56,16 @@ final class TransactionManager {
         var transactionByteArrayHexadecimal = String()
         var transactionSignatureByteArray = [UInt8]()
         var transactionSignatureByteArrayHexadecimal = String()
-
+        
         let commonPartByteArray = generateCommonTransactionPart(forTransaction: transaction)
         var transactionDependentPartByteArray: [UInt8]!
-        
         transactionByteArray += commonPartByteArray
         
         switch transaction.type {
         case .transferTransaction:
             
             transactionDependentPartByteArray = generateTransferTransactionPart(forTransaction: transaction as! TransferTransaction)
-            
+            print("__TX: transactionPart: \(transactionDependentPartByteArray)")
             transactionByteArray += transactionDependentPartByteArray
             
         case .multisigAggregateModificationTransaction:
@@ -116,23 +114,23 @@ final class TransactionManager {
         default:
             break
         }
-
+        
         transactionSignatureByteArray = generateTransactionSignature(forTransactionWithData: transactionByteArray, signWithAccount: account)
-
+        print("__TX: signature: \(transactionSignatureByteArray)")
         transactionByteArrayHexadecimal = transactionByteArray.toHexadecimalString()
         transactionSignatureByteArrayHexadecimal = transactionSignatureByteArray.toHexadecimalString()
-
+        
         let requestAnnounce = RequestAnnounce(data: transactionByteArrayHexadecimal, signature: transactionSignatureByteArrayHexadecimal)
         
         return requestAnnounce!
     }
     
     /**
-        Calculates the fee for the transaction with the provided transaction amount.
+     Calculates the fee for the transaction with the provided transaction amount.
      
-        - Parameter transactionAmount: The amount that will get transferred through the transactions.
+     - Parameter transactionAmount: The amount that will get transferred through the transactions.
      
-        - Returns: The fee for the transaction as a double.
+     - Returns: The fee for the transaction as a double.
      */
     open func calculateFee(forTransactionWithAmount transactionAmount: Double) -> Double {
         
@@ -150,11 +148,11 @@ final class TransactionManager {
     }
     
     /**
-        Calculates the fee for the transaction with the provided message.
+     Calculates the fee for the transaction with the provided message.
      
-        - Parameter transactionMessageByteArray: The message that will get sent with the transaction.
+     - Parameter transactionMessageByteArray: The message that will get sent with the transaction.
      
-        - Returns: The fee for the transaction as a double.
+     - Returns: The fee for the transaction as a double.
      */
     open func calculateFee(forTransactionWithMessage transactionMessageByteArray: [UInt8], isEncrypted: Bool = false) -> Double {
         
@@ -168,14 +166,14 @@ final class TransactionManager {
     }
     
     /**
-        Encrypts the provided message with the senders private key and the recipients
-        public key.
+     Encrypts the provided message with the senders private key and the recipients
+     public key.
      
-        - Parameter messageByteArray: The message that should get encrypted as a byte array.
-        - Parameter senderEncryptedPrivateKey: The encrypted private key of the sender.
-        - Parameter recipientPublicKey: The public key of the recipient.
+     - Parameter messageByteArray: The message that should get encrypted as a byte array.
+     - Parameter senderEncryptedPrivateKey: The encrypted private key of the sender.
+     - Parameter recipientPublicKey: The public key of the recipient.
      
-        - Returns: The encrypted message as a byte array.
+     - Returns: The encrypted message as a byte array.
      */
     open func encryptMessage(_ messageByteArray: [UInt8], senderEncryptedPrivateKey: String, recipientPublicKey: String) -> Array<UInt8> {
         
@@ -198,20 +196,20 @@ final class TransactionManager {
         messageData = messageData.aesEncrypt(key: sharedSecretByteArray, iv: customizedIVByteArray)!
         var encryptedByteArray: Array<UInt8> = Array(repeating: 0, count: messageData.length)
         messageData.getBytes(&encryptedByteArray, length: messageData.length)
-
+        
         let encryptedMessageByteArray = saltByteArray + customizedIVByteArray + encryptedByteArray
         
         return encryptedMessageByteArray
     }
     
     /**
-        Decrypts the provided encrypted message with the receivers private key and the senders public key.
+     Decrypts the provided encrypted message with the receivers private key and the senders public key.
      
-        - Parameter encryptedMessageByteArray: The encrypted message that should get decrypted as a byte array.
-        - Parameter recipientEncryptedPrivateKey: The encrypted private key of the recipient.
-        - Parameter senderPublicKey: The public key of the sender.
+     - Parameter encryptedMessageByteArray: The encrypted message that should get decrypted as a byte array.
+     - Parameter recipientEncryptedPrivateKey: The encrypted private key of the recipient.
+     - Parameter senderPublicKey: The public key of the sender.
      
-        - Returns: The decrypted message as a string or nil if the message was empty.
+     - Returns: The decrypted message as a string or nil if the message was empty.
      */
     open func decryptMessage(_ encryptedMessageByteArray: Array<UInt8>, recipientEncryptedPrivateKey: String, senderPublicKey: String) -> String? {
         
@@ -236,14 +234,14 @@ final class TransactionManager {
         
         return NSString(data: messageData! as Data, encoding: String.Encoding.utf8.rawValue) as? String
     }
-
+    
     /**
-        Validates a hexidecimal string and checks if the hexadecimal string
-        is made up of valid characters.
+     Validates a hexidecimal string and checks if the hexadecimal string
+     is made up of valid characters.
      
-        - Parameter hexadecimalString: The hexadecimal string that should get validated.
+     - Parameter hexadecimalString: The hexadecimal string that should get validated.
      
-        - Returns: A bool indicating whether the validation was successful or not.
+     - Returns: A bool indicating whether the validation was successful or not.
      */
     open func validateHexadecimalString(_ hexadecimalString: String) -> Bool {
         
@@ -264,15 +262,15 @@ final class TransactionManager {
     }
     
     /**
-        Validates a given account address and checks if the account address
-        is made up of valid characters.
+     Validates a given account address and checks if the account address
+     is made up of valid characters.
      
-        - Parameter accountAddress: The account address that should get validated.
+     - Parameter accountAddress: The account address that should get validated.
      
-        - Returns: A bool indicating whether the validation was successful or not.
+     - Returns: A bool indicating whether the validation was successful or not.
      */
     open func validateAccountAddress(_ accountAddress: String) -> Bool {
-
+        
         guard accountAddress.lengthOfBytes(using: String.Encoding.utf8) == 40 else { return false }
         
         let regex = "^(?:[A-Z2-7]{8})*(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}=)?$"
@@ -285,11 +283,11 @@ final class TransactionManager {
     // MARK: - Private Manager Methods
     
     /**
-        Generates the common part of the transaction data byte array.
+     Generates the common part of the transaction data byte array.
      
-        - Parameter transaction: The transaction for which the common part of the transaction data byte array should get generated.
+     - Parameter transaction: The transaction for which the common part of the transaction data byte array should get generated.
      
-        - Returns: The common part of the transaction data byte array.
+     - Returns: The common part of the transaction data byte array.
      */
     fileprivate func generateCommonTransactionPart(forTransaction transaction: Transaction) -> [UInt8] {
         
@@ -318,16 +316,18 @@ final class TransactionManager {
         commonPartByteArray += transactionFeeByteArray
         commonPartByteArray += transactionDeadlineByteArray
         
+        print("__TX: count: \(commonPartByteArray.count) commonPart: \(commonPartByteArray)")
+        
         return commonPartByteArray
     }
     
     /**
-        Generates the transaction dependent part of the transaction data byte
-        array for a transfer transaction.
+     Generates the transaction dependent part of the transaction data byte
+     array for a transfer transaction.
      
-        - Parameter transaction: The transfer transaction for which the transaction dependent part of the transaction data byte array should get generated.
+     - Parameter transaction: The transfer transaction for which the transaction dependent part of the transaction data byte array should get generated.
      
-        - Returns: The transaction dependent part of the transaction data byte array for a transfer transaction.
+     - Returns: The transaction dependent part of the transaction data byte array for a transfer transaction.
      */
     fileprivate func generateTransferTransactionPart(forTransaction transaction: TransferTransaction) -> [UInt8] {
         
@@ -372,12 +372,12 @@ final class TransactionManager {
     }
     
     /**
-        Generates the transaction dependent part of the transaction data byte
-        array for a multisig aggregate modification transaction.
+     Generates the transaction dependent part of the transaction data byte
+     array for a multisig aggregate modification transaction.
      
-        - Parameter transaction: The multisig aggregate modification transaction for which the transaction dependent part of the transaction data byte array should get generated.
+     - Parameter transaction: The multisig aggregate modification transaction for which the transaction dependent part of the transaction data byte array should get generated.
      
-        - Returns: The transaction dependent part of the transaction data byte array for a multisig aggregate modification transaction.
+     - Returns: The transaction dependent part of the transaction data byte array for a multisig aggregate modification transaction.
      */
     fileprivate func generateMultisigAggregateModificationTransactionPart(forTransaction transaction: MultisigAggregateModificationTransaction) -> [UInt8] {
         
@@ -427,12 +427,12 @@ final class TransactionManager {
     }
     
     /**
-        Generates the transaction dependent part of the transaction data byte
-        array for a multisig signature transaction.
+     Generates the transaction dependent part of the transaction data byte
+     array for a multisig signature transaction.
      
-        - Parameter transaction: The multisig signature transaction for which the transaction dependent part of the transaction data byte array should get generated.
+     - Parameter transaction: The multisig signature transaction for which the transaction dependent part of the transaction data byte array should get generated.
      
-        - Returns: The transaction dependent part of the transaction data byte array for a multisig signature transaction.
+     - Returns: The transaction dependent part of the transaction data byte array for a multisig signature transaction.
      */
     fileprivate func generateMultisigSignatureTransactionPart(forTransaction transaction: MultisigSignatureTransaction) -> [UInt8] {
         
@@ -454,12 +454,12 @@ final class TransactionManager {
     }
     
     /**
-        Generates the signature for the provided transaction data with the provided account.
+     Generates the signature for the provided transaction data with the provided account.
      
-        - Parameter transactionDataByteArray: The transaction data byte array for which the signature should get generated.
-        - Parameter account: The account with which the transaction data should get signed.
+     - Parameter transactionDataByteArray: The transaction data byte array for which the signature should get generated.
+     - Parameter account: The account with which the transaction data should get signed.
      
-        - Returns: The transaction signature as a byte array.
+     - Returns: The transaction signature as a byte array.
      */
     fileprivate func generateTransactionSignature(forTransactionWithData transactionDataByteArray: [UInt8], signWithAccount account: Account) -> [UInt8] {
         

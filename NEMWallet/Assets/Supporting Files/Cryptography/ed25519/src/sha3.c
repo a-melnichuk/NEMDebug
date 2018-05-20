@@ -254,11 +254,13 @@ void sha3_finalize(void *priv, unsigned char *out)
 	* M || 01, we would simply use 1 to start padding. */
 
 #ifndef SHA3_USE_KECCAK
+    printf("__USE_KECCAK");
 	/* SHA3 version */
 	ctx->s[ctx->wordIndex] ^=
 		(ctx->saved ^ ((uint64_t)((uint64_t)(0x02 | (1 << 2)) <<
 			((ctx->byteIndex) * 8))));
 #else
+    printf("__USE_KECCAK false");
 	/* For testing the "pure" Keccak version */
 	ctx->s[ctx->wordIndex] ^=
 		(ctx->saved ^ ((uint64_t)((uint64_t)1 << (ctx->byteIndex *

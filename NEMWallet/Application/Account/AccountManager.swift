@@ -280,15 +280,21 @@ final class AccountManager {
      */
     public func generateAddress(forPublicKey publicKey: String) -> String {
         
+        // 1. b = create 64 byte buffer
+        // 2. s_1 = sha256(from: pubkey, into: b)
+        // 3. t = hex(string(s_1))
+        // 4.
         var inBuffer = publicKey.asByteArray()
         var stepOneSHA256: Array<UInt8> = Array(repeating: 0, count: 64)
         
         SHA256_hash(&stepOneSHA256, &inBuffer, 32)
-        
+        print("__NEM_ADDRESS: SHA256_hash: \(stepOneSHA256.toHexadecimalString())")
         let stepOneSHA256Text = NSString(bytes: stepOneSHA256, length: stepOneSHA256.count, encoding: String.Encoding.utf8.rawValue) as! String
+        print("__NEM_ADDRESS: stepOneSHA256Text: \(stepOneSHA256Text)")
         let stepTwoRIPEMD160Text = RIPEMD.hexStringDigest(stepOneSHA256Text) as String
+        print("__NEM_ADDRESS: stepTwoRIPEMD160Text: \(stepTwoRIPEMD160Text)")
         let stepTwoRIPEMD160Buffer = stepTwoRIPEMD160Text.asByteArray()
-        
+        print("__NEM_ADDRESS: count: \(stepTwoRIPEMD160Buffer.count) stepTwoRIPEMD160Buffer: \(stepTwoRIPEMD160Buffer.pretty)")
         var version = Array<UInt8>()
         version.append(Constants.activeNetwork)
         
@@ -305,8 +311,15 @@ final class AccountManager {
         checksum.append(checksumBuffer[2])
         checksum.append(checksumBuffer[3])
         
+        
+        
         let stepFourResultBuffer = stepThreeVersionPrefixedRipemd160Buffer + checksum
+        
+        print("__NEM_ADDRESS: stepFourResultBuffer: \(stepFourResultBuffer.toHexadecimalString())")
+        
         let address = Base32Encode(Data(bytes: stepFourResultBuffer, count: stepFourResultBuffer.count))
+        
+        print("__NEM_ADDRESS: address: \(address)")
         
         return address
     }
@@ -396,7 +409,11 @@ final class AccountManager {
     private func generatePublicKey(fromPrivateKey privateKey: String) -> String {
         
         var publicKeyBytes: Array<UInt8> = Array(repeating: 0, count: 32)
+        let pubkeyInfo1 = privateKey.asByteArray().reduce("") { $0 == "" ? "\($1)" : $0 + ", \($1)" }
+        print("__PUBKEY INFO 1: \(pubkeyInfo1)")
         var privateKeyBytes: Array<UInt8> = privateKey.asByteArrayEndian(privateKey.asByteArray().count)
+        let pubkeyInfo2 = privateKeyBytes.reduce("") { $0 == "" ? "\($1)" : $0 + ", \($1)" }
+        print("__PUBKEY INFO 2: \(pubkeyInfo2)")
         createPublicKey(&publicKeyBytes, &privateKeyBytes)
         
         let publicKey = Data(bytes: publicKeyBytes).toHexadecimalString()

@@ -11,6 +11,8 @@ import AlamofireNetworkActivityIndicator
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    let testService = TestService()
+    
     // MARK: - Application Properties
     
     var window: UIWindow?
@@ -31,7 +33,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             
             presentSetupViewController()
         }
-        
+        testService.testAddresses()
         return true
     }
     

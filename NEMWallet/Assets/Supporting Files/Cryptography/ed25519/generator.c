@@ -32,6 +32,12 @@ void toHex(unsigned char *outHex, unsigned  char *inBytes, int32_t inBytesLen )
     }
 }
 
+void sha3_512_test(unsigned char *out_private_key, const char* seed)
+{
+    size_t seedSize = strlen(seed);
+    sha3_512(seed, seedSize, out_private_key);
+}
+
 void SHA256_hash(unsigned char *out,unsigned  char *in , int32_t inLen )
 {
     uint8_t md[hash_256_Size];
@@ -55,6 +61,20 @@ void createPrivateKey(unsigned char *out_private_key)
     }
 }
 
+void createPrivateKeyWithSeed(unsigned char *out_private_key, const char* seed)
+{
+    unsigned char private_key[privateKeySize];
+    size_t seedSize = strlen(seed);
+    printf("__SEED: len: %d, seed: %s\n", seedSize, seed);
+    sha3_512(seed, seedSize, private_key);
+    printf("__SEED:");
+    for (int i = 0; i < privateKeyPartSize; i++) {
+        out_private_key[i] = private_key[i];
+        printf("%d ", private_key[i]);
+    }
+    printf("\n");
+}
+
 void createPublicKey(unsigned char *public_key,  unsigned char *private_key)
 {   
 
@@ -67,7 +87,7 @@ void createPublicKey(unsigned char *public_key,  unsigned char *private_key)
     private_key_hash[31] |= 64;
     
     ge_p3 A;
-    unsigned char public_key_buffer [publicKeySize];
+    unsigned char public_key_buffer[publicKeySize];
     
     ge_scalarmult_base(&A, private_key_hash);
     
